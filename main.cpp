@@ -22,7 +22,8 @@
  *    <There is no input.>
  *
  * OUTPUT:
- *
+ *	  Dijkstra's - Path to every city from Atlanta & associated mileage.
+ *	  MST - Edges & Total Mileage
  *
  *****************************************************************************/
 int main()
@@ -32,7 +33,12 @@ int main()
 		 << "* ASSIGNMENT #12 : Dijkstra and MST\n"
 		 << "* CLASS          : CS1D - MW: 3:00pm\n"
 		 << "* DUE DATE       : 11/29/2017\n*\n"
-		 << "* DESCRIPTION: This program will \n"
+		 << "* DESCRIPTION: This program will implement Dijkstra's algorithm\n"
+		 << "* and Prim-Kruskal's algorithm on a user defined Graph ADT. For\n"
+		 << "* Dijkstra's algorithm, the shortest path to each city from \n"
+		 << "* Atlanta will be printed with the associated mileage. The MST \n"
+		 << "* algorithm will display the edges found during its implementation\n"
+		 << "* and the total mileage.\n"
 		 <<	"***************************************************************\n\n";
 
 	Graph graph; // Graph object.

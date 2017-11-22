@@ -4,7 +4,12 @@
 * CLASS          : CS1D - MW: 3:00pm
 * DUE DATE       : 11/29/2017
 *
-* DESCRIPTION: This program will 
+* DESCRIPTION: This program will implement Dijkstra's algorithm
+* and Prim-Kruskal's algorithm on a user defined Graph ADT. For
+* Dijkstra's algorithm, the shortest path to each city from 
+* Atlanta will be printed with the associated mileage. The MST 
+* algorithm will display the edges found during its implementation
+* and the total mileage.
 ***************************************************************
 
 Adding vertices to the graph...
