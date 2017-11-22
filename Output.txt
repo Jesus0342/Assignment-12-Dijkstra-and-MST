@@ -20,19 +20,32 @@ Boston
 Chicago
 Denver
 Kansas City
-(Seattle, San Francisco) has the smallest weight (807) among the edges adjacent to T.
-(San Francisco, Los Angeles) has the smallest weight (381) among the edges adjacent to T.
-(Los Angeles, Denver) has the smallest weight (1015) among the edges adjacent to T.
-(Denver, Kansas City) has the smallest weight (599) among the edges adjacent to T.
-(Kansas City, Dallas) has the smallest weight (496) among the edges adjacent to T.
-(Dallas, Houston) has the smallest weight (239) among the edges adjacent to T.
-(Kansas City, Chicago) has the smallest weight (533) among the edges adjacent to T.
-(Dallas, Atlanta) has the smallest weight (781) among the edges adjacent to T.
-(Atlanta, Miami) has the smallest weight (661) among the edges adjacent to T.
-(Chicago, New York) has the smallest weight (787) among the edges adjacent to T.
-(New York, Boston) has the smallest weight (214) among the edges adjacent to T.
 
-Printing MST:
+*******************************
+* PART 1 - DIJKSTRA'S ALGORITHM *
+*********************************
+
+
+****************
+* PART 2 - MST *
+****************
+
+Determining the MST starting at Seattle.
+
+Printing MST edges:
+(Seattle, San Francisco)
+(San Francisco, Los Angeles)
+(Los Angeles, Denver)
+(Denver, Kansas City)
+(Kansas City, Dallas)
+(Dallas, Houston)
+(Kansas City, Chicago)
+(Dallas, Atlanta)
+(Atlanta, Miami)
+(Chicago, New York)
+(New York, Boston)
+
+Printing the MST:
 Seattle
 San Francisco
 Los Angeles
