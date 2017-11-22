@@ -3,6 +3,8 @@
 Graph::Graph()
 {
 	dfsDistance = 0;
+
+	mstDistance = 0;
 }
 
 Graph::~Graph()
@@ -143,320 +145,6 @@ vector<string> Graph::edges()
 	return edgeList;
 }
 
-int Graph::DFS(string startingCity, vector<string> &dfs)
-{
-	// Gets the graph index of the vertex being visited.
-	int currVertex = findVertex(startingCity);
-
-	// Visits the vertex.
-	graph.at(currVertex).visited = true;
-
-	// Searches the vector of visited vertices for the city being visited.
-	vector<string>::iterator nextCityIt = find(dfs.begin(), dfs.end(), startingCity);
-
-	// Adds the vertex to the vector if it is not already in the vector.
-	if(nextCityIt == dfs.end())
-	{
-		dfs.push_back(startingCity);
-	}
-
-	// Performs a recursive call on itself to visit all vertices in the graph.
-	if(verticesVisited() != graph.size())
-	{
-		// Gets the graph index of the next closest city in the graph.
-		int nextVertex = smallestEdgeDFS(currVertex, dfs);
-
-		// Performs recursive call to visit the next closest city.
-		DFS(graph.at(nextVertex).city, dfs);
-	}
-
-	return dfsDistance;
-}
-
-vector<string> Graph::getDiscoveryEdges(vector<string> &dfs)
-{
-	vector<Edge> discEdges; // Vector of the discovery edges.
-
-	// Adds the discovery edges to the vector in the order they were discovered.
-	for(unsigned int i = 0; i < graph.size(); i++)
-	{
-		int dfsIndex = findVertex(dfs.at(i));
-
-		for(unsigned int j = 0; j < graph.at(dfsIndex).edgeList.size(); j++)
-		{
-			// Only adds the edge to the vector if it is a discovery edge.
-			if(graph.at(dfsIndex).edgeList.at(j).discoveryEdge)
-			{
-				discEdges.push_back(graph.at(dfsIndex).edgeList.at(j));
-			}
-		}
-	}
-
-	// Deletes edges with the same vertices to avoid duplicates.
-	deleteDuplicates(discEdges);
-
-	// Iterator to the beginning of the vector of discovery edges.
-	vector<Edge>::iterator edgeIt = discEdges.begin();
-
-	vector<string> discoveryEdges; // Vector of discovery edge pairs.
-
-	// Adds the discovery edges to the string vector in (u, v) format.
-	while(edgeIt != discEdges.end())
-	{
-		discoveryEdges.push_back("(" + edgeIt->u + ", " + edgeIt->v + ")");
-
-		edgeIt++;
-	}
-
-	return discoveryEdges;
-}
-
-vector<string> Graph::getBackEdges(vector<string> &dfs)
-{
-	vector<Edge> backEdges; // Vector of back edges.
-
-	// Adds the back edges to the vector in the order they were discovered.
-	for(unsigned int i = 0; i < graph.size(); i++)
-	{
-		int dfsIndex = findVertex(dfs.at(i));
-
-		for(unsigned int j = 0; j < graph.at(dfsIndex).edgeList.size(); j++)
-		{
-			// Only adds the edge to the vector if it is a back edge.
-			if(!(graph.at(dfsIndex).edgeList.at(j).discoveryEdge))
-			{
-				backEdges.push_back(graph.at(dfsIndex).edgeList.at(j));
-				//cout << "Added edge (" << graph.at(dfsIndex).edgeList.at(j).u << ", " << graph.at(dfsIndex).edgeList.at(j).v << ")\n";
-			}
-		}
-	}
-
-	// Deletes edges with the same vertices to avoid duplicates.
-	deleteDuplicates(backEdges);
-
-	// Iterator to the beginning of the vector of back edges.
-	vector<Edge>::iterator edgeIt = backEdges.begin();
-
-	vector<string> backEdgeList; // Vector of back edge pairs.
-
-	// Adds the back edges to the string vector in (u, v) format.
-	while(edgeIt != backEdges.end())
-	{
-		backEdgeList.push_back("(" + edgeIt->u + ", " + edgeIt->v + ")");
-
-		edgeIt++;
-	}
-
-	return backEdgeList;
-}
-
-int Graph::smallestEdgeDFS(int currVertex, vector<string> &dfs)
-{
-	// Searches for the next closest edge if all edges of the current vertex have
-	// not been visited yet, else backtracks to find a vertex whose edges have
-	// not all been discovered.
-	if(edgesDiscovered(currVertex) != graph.at(currVertex).edgeList.size())
-	{
-		// Edge list vertex of the closest city.
-		int smallestIndex = 0;
-
-		// Edge list vertex of the city whose distance is being compared to the
-		// city at edgeList.at(smallestIndex).
-		int compIndex = smallestIndex + 1;
-
-		// Gets the size of the edgeList for the current vertex.
-		int size = graph.at(currVertex).edgeList.size();
-
-		// Finds the next closest city that has not been visited yet.
-		while(compIndex < size)
-		{
-			// Gets the graph index of the next closest city.
-			int smallestVertex = findVertex(graph.at(currVertex).edgeList.at(smallestIndex).v);
-
-			// Gets the graph index of the city in the edge list being comapred
-			// to the city at edgeList.at(smallestIndex).
-			int compVertex = findVertex(graph.at(currVertex).edgeList.at(compIndex).v);
-
-			// If the vertex at graph.at(smallestVertex) has already been visited,
-			// increments smallest index and does nothing, else checks if the
-			// vertex it is being compared to has been visited.
-			if(graph.at(smallestVertex).visited)
-			{
-				smallestIndex++;
-			}
-			else
-			{
-				// If the vertex smallestVertex is being compared to has not been
-				// visited, compares their weights, else does nothing.
-				if(!(graph.at(compVertex).visited))
-				{
-					if(graph.at(currVertex).edgeList.at(smallestIndex).weight >=
-					   graph.at(currVertex).edgeList.at(compIndex).weight)
-					{
-						smallestIndex = compIndex;
-					}
-				}
-			}
-
-			// Increments compIndex so that it is always the after smallestIndex.
-			compIndex++;
-		}
-
-		// Marks the edge that has the smallest weight as a discovery edge.
-		graph.at(currVertex).edgeList.at(smallestIndex).discoveryEdge = true;
-
-
-
-		// Adds the distance to the overall distance traveled.
-		dfsDistance += graph.at(currVertex).edgeList.at(smallestIndex).weight;
-
-		// Gets the name of the city that is the closest to the current city.
-		string nextCity = graph.at(currVertex).edgeList.at(smallestIndex).v;
-
-		// Finds the graph index of the closest city.
-		smallestIndex = findVertex(nextCity);
-
-		for(unsigned int i = 0; i < graph.at(smallestIndex).edgeList.size(); i++)
-		{
-			if(graph.at(currVertex).city == graph.at(smallestIndex).edgeList.at(i).v)
-			{
-				graph.at(smallestIndex).edgeList.at(i).discoveryEdge = true;
-			}
-		}
-
-		return smallestIndex;
-	}
-	else
-	{
-		// Iterator that gets the location of the current city in the vector of
-		// names that contains the cities in the order they were visited.
-		vector<string>::iterator dfsIt = find(dfs.begin(), dfs.end(),
-										 	  graph.at(currVertex).city);
-
-		// Decrements the iterator to the previous city visited.
-		dfsIt--;
-
-		// Finds the graph index of the previous city visited.
-		int backIndex = findVertex(*dfsIt);
-
-		// Preforms a recursive call to check if the previous city visited has
-		// any unvisited edges to continue the DFS.
-		return smallestEdgeDFS(backIndex, dfs);
-	}
-}
-
-int Graph::BFS(string startingCity, vector<string> &bfs)
-{
-    // Reset the graph, this should be its own function
-    for (unsigned int i=0; i<graph.size(); i++) {
-        graph.at(i).visited = false;
-        for (unsigned int j=0; j< graph.at(i).edgeList.size(); j++)
-            graph.at(i).edgeList.at(j).discoveryEdge = false;
-    }
-
-    // Get the graph index of the vertex being visited.
-	int currVertex = findVertex(startingCity);
-
-	// Visit the starting vertex
-	graph.at(currVertex).visited = true;
-
-	// Create a newLevel vector to hold the current level, containing only
-	// the 1st vertex, and add the first vertex to the bfs vector
-	vector<int> newLevel;
-	newLevel.push_back(currVertex);
-	bfs.push_back(startingCity);
-
-	// Start recursion
-	return BFSRecur(bfs, newLevel);
-}
-
-int Graph::BFSRecur(vector<string> &bfs, vector<int> previousLevel)
-{
-    vector<int> newLevel;
-    vector<int> currLevel;
-    int levelDistance = 0;
-
-    vector<Edge> * currEdgeList;
-    Vertex * startingVertex;
-    Vertex * currVertex;
-    int currVertexID;
-
-    // Iterate through the previous level
-    for (unsigned int i=0; i<previousLevel.size(); i++) {
-        startingVertex = &graph.at(previousLevel.at(i));
-        currEdgeList = &startingVertex->edgeList;
-
-        // Iterate through the ith vertex's edge list
-        for (unsigned int j=0; j<currEdgeList->size(); j++)
-        {
-            // Add all non-visited levels to the next level, in closest order
-            currVertexID = findVertex(otherVertex(currEdgeList->at(j),startingVertex->city));
-            currVertex = &graph.at(currVertexID);
-            if (!currVertex->visited)
-            {
-                // Add the edge length to the distance, including return trip
-                levelDistance += currEdgeList->at(j).weight;
-
-                // Mark the vertex as visited and the edge as a discovery edge
-                currVertex->visited = true;
-                currEdgeList->at(j).discoveryEdge = true;
-
-                // Also mark the reverse edge as a discovery edge
-                for(unsigned int i = 0; i < currVertex->edgeList.size(); i++)
-                {
-                    if(currVertex->edgeList.at(i).v == startingVertex->city)
-                        currVertex->edgeList.at(i).discoveryEdge = true;
-                }
-
-                // Insert the current vertex in the sorted position
-                bool inserted = false; // could do the same thing by changing the visited variable, but this is clearer
-                for (unsigned int k=0; k<currLevel.size() && !inserted; k++)
-                {
-                    if (currEdgeList->at(j).weight < distance(startingVertex, &graph.at(currLevel.at(k))))
-                    {
-                        currLevel.insert(currLevel.begin()+k,currVertexID);
-                        inserted = true;
-                    }
-                }
-                if (!inserted)
-                    currLevel.push_back(findVertex(currVertex->city));
-            }
-        }
-        // Add the current level vertices to the the end of the bfs vector
-        for (unsigned int m=0; m<currLevel.size(); m++) {
-            bfs.push_back(graph.at(currLevel.at(m)).city);
-        }
-
-        // Add the current level vertices to the end of the newLevel vector
-        newLevel.insert(newLevel.end(),currLevel.begin(),currLevel.end());
-        currLevel.clear();
-    }
-
-    // If still has vertices, do recursive call
-    if (newLevel.size() > 0)
-        return levelDistance + BFSRecur(bfs, newLevel);
-    else
-        return levelDistance;
-}
-
-int Graph::distance(Vertex * v1, Vertex * v2)
-{
-    // find connecting edge
-    for (unsigned int i=0; i<v1->edgeList.size(); i++) {
-        if (v1->edgeList.at(i).u == v2->city || v1->edgeList.at(i).v == v2->city)
-            return v1->edgeList.at(i).weight;
-    }
-    return -1;
-}
-
-string Graph::otherVertex(Edge currEdge, string startingCity)
-{
-    if(currEdge.u == startingCity)
-        return currEdge.v;
-    else
-        return currEdge.u;
-}
-
 unsigned int Graph::verticesVisited()
 {
 	int numVisited = 0; // Number of vertices visited.
@@ -494,33 +182,198 @@ unsigned int Graph::edgesDiscovered(int currVertex)
 	return numVisited;
 }
 
-void Graph::deleteDuplicates(vector<Edge> &edgeList)
+int Graph::primJarnikMST(string startingCity, vector<string> &mst)
 {
-	vector<Edge>::iterator listIt = edgeList.begin();
+    // Reset the graph, this should be its own function
+    if(verticesVisited() == graph.size())
+    {
+        for (int i=0; i<graph.size(); i++)
+        {
+            graph[i].visited = false;
 
-	// Traverses the list of edges to delete pairs that are the same.
-	while(listIt != edgeList.end())
+            for (int j=0; j< graph.at(i).edgeList.size(); j++)
+            {
+                graph[i].edgeList[j].discoveryEdge = false;
+            }
+        }
+
+        mstDistance = 0;
+    }
+
+	// Gets the graph index of the vertex being visited.
+	int currVertex = findVertex(startingCity);
+
+	// Visits the vertex.
+	graph.at(currVertex).visited = true;
+
+	// Adds the vertex to the MST vector.
+	mst.push_back(startingCity);
+
+	// Performs a recursive call on itself to visit all vertices in the graph.
+	if(mst.size() != size())
 	{
-		vector<Edge>::iterator compIt = listIt + 1;
+		// Gets the graph index of the next closest city in the graph.
+		int nextVertex = smallestEdgeMST(mst);
 
-		bool deleted = false;
+		// Performs recursive call to visit the next closest city.
+		primJarnikMST(graph.at(nextVertex).city, mst);
+	}
 
-		// Deletes the first instance of an edge that has the same pair as
-		// the edge pointed to by listIt.
-		while(compIt != edgeList.end() && !deleted)
+	return mstDistance;
+}
+
+int Graph::smallestEdgeMST(vector<string> &mst)
+{
+	// Finds the closest city to the root if it is the only vertex in T, else
+	// finds the edge with the smallest weight among the edges adjacent to T.
+	if(mst.size() == 1)
+	{
+		// Graph vertex of the city closest to the root.
+		int smallestVertex = smallestEdge(findVertex(mst.front()));
+
+		// Accumulates total distance.
+		mstDistance += distanceBetween(findVertex(mst.front()), smallestVertex);
+
+		// Prints the edge.
+		cout << "(" << mst.front() << ", " << graph[smallestVertex].city << ")\n";
+
+		return smallestEdge(findVertex(mst.front()));
+	}
+	else
+	{
+		// MST index of the city with the smallest edge and the index of the
+		// city it is being compared to.
+		int smallId = 0;
+		int compId = smallId + 1;
+
+		// Size of T.
+		int size = mst.size();
+
+		// Compares the smallest edge of smallId to all other smallest edges of
+		// the cities in T.
+		while(compId < size)
 		{
-			if(listIt->u == compIt->v && listIt->v == compIt->u)
-			{
-				edgeList.erase(compIt);
+			// Graph indexes of the city in MST with the smallest edge and city
+			// it is being compared to.
+			int smallVer = findVertex(mst[smallId]);
+			int compVer = findVertex(mst[compId]);
 
-				deleted = true;
+			// Increments smallId to the next city in MST if all of the edges
+			// of smallVer have already been visited, else checks if all the
+			// edges of compVer have been visited.
+			if(graph[smallVer].edgeList.size() == edgesDiscovered(smallVer))
+			{
+				smallId++;
 			}
 			else
 			{
-				compIt++;
+				// Compares the smallest edge of smallVer and compVer if compVer's
+				// edges have not all been visited.
+				if(graph[compVer].edgeList.size() != edgesDiscovered(compVer))
+				{
+					// Distance between smallVer and its smallest edge.
+					int smallDist = distanceBetween(smallVer, smallestEdge(smallVer));
+
+					// Distance between compVer and its smallest edge.
+					int compDist =  distanceBetween(compVer, smallestEdge(compVer));
+
+					// Assigns compId to smallId if compVer has a smaller
+					// edge than the current smallest vertex.
+					if(smallDist > compDist)
+					{
+						smallId = compId;
+					}
+				}
+			}
+
+			// Increments compId so that it is always at least 1 index ahead of
+			// smallId.
+			compId++;
+		}
+
+		// Accumulates the total MST distance.
+		mstDistance += distanceBetween(findVertex(mst[smallId]),
+				   	   	   	   	   	   smallestEdge(findVertex(mst[smallId])));
+
+		// Graph index of the city with the closest edge.
+		int smallestVertex = findVertex(mst[smallId]);
+
+		// Gets the name of the city that is the closest to the city with the
+		// closest edge.
+		string nextCity = graph.at(smallestEdge(smallestVertex)).city;
+
+		// Prints the smallest edge (next edge to be visited).
+		cout << "(" << mst[smallId] << ", " << nextCity << ")\n";
+
+		// Finds the graph index of the closest city.
+		smallId = findVertex(nextCity);
+
+		return smallId;
+	}
+}
+
+int Graph::smallestEdge(int vertex)
+{
+	// Edge list vertex of the closest city.
+	int smallestIndex = 0;
+
+	// Edge list vertex of the city whose distance is being compared to the
+	// city at edgeList.at(smallestIndex).
+	int compIndex = smallestIndex + 1;
+
+	// Gets the size of the edgeList for the current vertex.
+	int size = graph.at(vertex).edgeList.size();
+
+	// Finds the next closest city that has not been visited yet.
+	while(compIndex < size)
+	{
+		// Gets the graph index of the next closest city.
+		int smallestVertex = findVertex(graph.at(vertex).edgeList.at(smallestIndex).v);
+
+		// Gets the graph index of the city in the edge list being comapred
+		// to the city at edgeList.at(smallestIndex).
+		int compVertex = findVertex(graph.at(vertex).edgeList.at(compIndex).v);
+
+		// If the vertex at graph.at(smallestVertex) has already been visited,
+		// increments smallest index and does nothing, else checks if the
+		// vertex it is being compared to has been visited.
+		if(graph.at(smallestVertex).visited)
+		{
+			smallestIndex++;
+		}
+		else
+		{
+			// If the vertex smallestVertex is being compared to has not been
+			// visited, compares their weights, else does nothing.
+			if(!(graph.at(compVertex).visited))
+			{
+				if(graph.at(vertex).edgeList.at(smallestIndex).weight >=
+						graph.at(vertex).edgeList.at(compIndex).weight)
+				{
+					smallestIndex = compIndex;
+				}
 			}
 		}
 
-		listIt++;
+		// Increments compIndex so that it is always the after smallestIndex.
+		compIndex++;
 	}
+
+	// Finds the graph index of the closest city.
+	smallestIndex = findVertex(graph.at(vertex).edgeList.at(smallestIndex).v);
+
+	return smallestIndex;
+}
+
+int Graph::distanceBetween(int v1, int v2)
+{
+	int i = 0;
+
+	// Finds v2 in v1's edge list.
+	while(graph[v1].edgeList[i].v != graph[v2].city)
+	{
+		i++;
+	}
+
+	return graph[v1].edgeList[i].weight;
 }

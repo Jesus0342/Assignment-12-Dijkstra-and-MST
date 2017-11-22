@@ -93,26 +93,15 @@ public:
 	// POST-CONDITION: The list of cities visited in the DFS order is returned.
 	int DFS(string startingCity, vector<string> &dfs);
 
-	// Returns a list of the discovery edges created during the DFS.
+	// Determines the minimum spanning tree of the graph using Prim-Jarnik's
+	// Algorithm.
 	// PRE-CONDITIONS:
-	// dfs - Vector of city names in the order they were visited during DFS must
-	// 		 be defined.
-	vector<string> getDiscoveryEdges(vector<string> &dfs);
-
-	// Returns a list of the back edges created by the DFS.
-	// PRE-CONDITIONS:
-	// dfs - Vector of city names in the order they were visited during DFS must
-	// 		 be defined.
-	vector<string> getBackEdges(vector<string> &dfs);
-
-	// Performs a recursive breadth-first search on the graph starting at the
-	// indicated city.
-	// PRE-CONDITIONS:
-	// startingCity - City where the BFS will begin must be defined.
-	// bfs - Vector of city names in the order they were visited during DFS does
-	//		 not have to be defined.
-	// POST-CONDITION: The bfs vector is modified to include the city names in BFS order.
-	int BFS(string startingCity, vector<string> &bfs);
+	// startingCity - City where MST will begin must be defined.
+	// mst - Vector of city names in the order they were visited during the MST
+	// 		 "traversal"
+	// POST-CONDITION: The mst vector will contain the names of the cities in
+	// 				   the order they were visited in during the MST "traversal"
+	int primJarnikMST(string startingCity, vector<string> &mst);
 
 private:
 	// Finds the closest vertex to the current vertex and returns its graph index.
@@ -120,6 +109,21 @@ private:
 	// currVertex - Index of the current vertex must be defined.
 	// dfs - Vector of cities visited during DFS must be defined.
 	int smallestEdgeDFS(int currVertex, vector<string> &dfs);
+
+	// Finds the smallest edge from all of the previously visited vertices and
+	// returns its graph index.
+	// PRE-CONDITIONS:
+	// mst - Vector of cities visited during MST must be defined.
+	// POST-CONDITION: The graph index of the next vertex to be visited is
+	//				   returned.
+	int smallestEdgeMST(vector<string> &mst);
+
+	// Returns the smallest edge of the indicated vertex.
+	// PRE-CONDITION:
+	// vertex - Vertex whose smallest edge will be found must be defined.
+	int smallestEdge(int vertex);
+
+	int distanceBetween(int v1, int v2);
 
 	// Returns the number of vertices that have been visited.
 	unsigned int verticesVisited();
@@ -129,33 +133,11 @@ private:
 	// currVertex - Graph index of the current vertex must be defined.
 	unsigned int edgesDiscovered(int currVertex);
 
-	// Deletes edge pairs that have the same u & v.
-	// If (u, v) already exists, all (v, u) edge pairs will be deleted.
-	void deleteDuplicates(vector<Edge> &edgeList);
-
 	vector<Vertex> graph; // Vector of vertices used to represent a graph.
 
 	int dfsDistance; // Distance traveled during DFS.
 
-	// When called by BFS(), carries out the recursive breadth-first search,
-	// continuing from each of the cities from previousLevel
-	// PRE-CONDITIONS:
-	// bfs - Vector of city names in the order they were visited during DFS does
-	//		 not have to be defined.
-	// previousLevel: the graph positions of all the cities visited in the previous level
-	// POST-CONDITION: The bfs vector is modified to include the city names in BFS order.
-	int BFSRecur(vector<string> &bfs, vector<int> previousLevel);
-
-	// Returns the city name of the vertex in an edge that is not startingCity
-	// PRE-CONDITIONS:
-	// currEdge - Edge in question that contains startingCity and the city to be found
-	// startingCity - city name of the vertex opposite of the city to be found
-	string otherVertex(Edge currEdge, string startingCity);
-
-    // Returns the distance between two vertices
-	// PRE-CONDITIONS:
-	// v1, v2 - the vertices to find the distance between
-	int distance(Vertex * v1, Vertex * v2);
+	int mstDistance;
 };
 
 #endif
