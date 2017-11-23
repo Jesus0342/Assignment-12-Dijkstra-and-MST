@@ -84,15 +84,6 @@ public:
 	// Returns a list of the edges in the graph.
 	vector<string> edges();
 
-	// Performs a depth-first search on the graph starting at the indicated city
-	// using recursion.
-	// PRE-CONDITIONS:
-	// startingCity - City where the DFS will begin must be defined.
-	// dfs - Vector of city names in the order they were visited during DFS does
-	//		 not have to be defined.
-	// POST-CONDITION: The list of cities visited in the DFS order is returned.
-	int DFS(string startingCity, vector<string> &dfs);
-
 	// Determines the minimum spanning tree of the graph using Prim-Jarnik's
 	// Algorithm.
 	// PRE-CONDITIONS:
@@ -104,12 +95,6 @@ public:
 	int primJarnikMST(string startingCity, vector<string> &mst);
 
 private:
-	// Finds the closest vertex to the current vertex and returns its graph index.
-	// PRE-CONDITIONS:
-	// currVertex - Index of the current vertex must be defined.
-	// dfs - Vector of cities visited during DFS must be defined.
-	int smallestEdgeDFS(int currVertex, vector<string> &dfs);
-
 	// Finds the smallest edge from all of the previously visited vertices and
 	// returns its graph index.
 	// PRE-CONDITIONS:
@@ -123,6 +108,10 @@ private:
 	// vertex - Vertex whose smallest edge will be found must be defined.
 	int smallestEdge(int vertex);
 
+	// Returns the distance between two vertices.
+	// PRE-CONDITIONS:
+	// v1 - Starting vertex
+	// v2 - Ending vertex
 	int distanceBetween(int v1, int v2);
 
 	// Returns the number of vertices that have been visited.
@@ -135,9 +124,7 @@ private:
 
 	vector<Vertex> graph; // Vector of vertices used to represent a graph.
 
-	int dfsDistance; // Distance traveled during DFS.
-
-	int mstDistance;
+	int mstDistance; // Total mileage of MST.
 };
 
 #endif
