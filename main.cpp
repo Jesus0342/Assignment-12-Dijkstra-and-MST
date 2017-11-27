@@ -68,7 +68,7 @@ int main()
 
 	// Prints the path from the starting vertex to all other vertices in the graph.
 	cout << "Printing the paths from " << startCity << " to all other cities:\n";
-	for(int i = 0; i < graph.size(); i++)
+	for(int i = 1; i < graph.size(); i++)
 	{
 		// Specifies which path will be printed.
 		cout << startCity << " to " << T[i] << endl;
