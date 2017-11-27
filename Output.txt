@@ -31,10 +31,6 @@ Kansas City
 *********************************
 
 Printing the paths from Atlanta to all other cities:
-Atlanta to Atlanta
-Atlanta
-Total Distance: 0
-
 Atlanta to Miami
 Atlanta -> Miami
 Total Distance: 661
