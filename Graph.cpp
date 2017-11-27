@@ -2,8 +2,6 @@
 
 Graph::Graph()
 {
-	dfsDistance = 0;
-
 	mstDistance = 0;
 }
 
@@ -182,10 +180,61 @@ unsigned int Graph::edgesDiscovered(int currVertex)
 	return numVisited;
 }
 
-int Graph::primJarnikMST(string startingCity, vector<string> &mst)
+void Graph::shortestPathsDijkstra(string startingCity, vector<string> &T, int costs[], int parent[])
 {
     // Reset the graph, this should be its own function
     if(verticesVisited() == graph.size())
+    {
+        for (int i=0; i<graph.size(); i++)
+        {
+            graph[i].visited = false;
+
+            for (int j=0; j< graph.at(i).edgeList.size(); j++)
+            {
+                graph[i].edgeList[j].discoveryEdge = false;
+            }
+        }
+    }
+
+	int currVertex = findVertex(startingCity);
+
+	T.push_back(graph[currVertex].city);
+
+	costs[currVertex] = 0;
+	parent[currVertex] = -1;
+
+	graph[currVertex].visited = true;
+
+	while(T.size() != size())
+	{
+		findClosest(T, costs, parent);
+	}
+}
+
+vector<string> Graph::returnPath(string start, string end, int parent[])
+{
+	vector<string> path;
+
+	int vertex = findVertex(end);
+
+	while(parent[vertex] != -1)
+	{
+		path.push_back(graph[vertex].city);
+
+		vertex = parent[vertex];
+	}
+
+	path.push_back(graph[vertex].city);
+
+	reverse(path.begin(), path.end());
+
+	return path;
+}
+
+int Graph::primJarnikMST(string startingCity, vector<string> &mst)
+{
+    // Reset the graph, this should be its own function
+    if(verticesVisited() == size())
     {
         for (int i=0; i<graph.size(); i++)
         {
@@ -220,6 +269,115 @@ int Graph::primJarnikMST(string startingCity, vector<string> &mst)
 	}
 
 	return mstDistance;
+}
+
+void Graph::findClosest(vector<string> &T, int costs[], int parent[])
+{
+	// Finds the closest city to the root if it is the only vertex in T, else
+	// finds the edge with the smallest weight among the edges adjacent to T.
+	if(T.size() == 1)
+	{
+		int frontVer = findVertex(T.front());
+
+		int nextVer = smallestEdge(frontVer);
+
+		costs[nextVer] = distanceBetween(frontVer, nextVer);
+		parent[nextVer] = frontVer;
+
+		graph[nextVer].visited = true;
+
+		T.push_back(graph[nextVer].city);
+	}
+	else
+	{
+		// MST index of the city with the smallest edge and the index of the
+		// city it is being compared to.
+		int smallId = 0;
+		int compId = smallId + 1;
+
+		int smallDist;
+		int compDist;
+
+		// Size of T.
+		int size = T.size();
+
+		int nextVertex;
+
+		// Compares the smallest edge of smallId to all other smallest edges of
+		// the cities in T.
+		while(compId < size)
+		{
+			// Graph indexes of the city in MST with the smallest edge and city
+			// it is being compared to.
+			int smallVer = findVertex(T[smallId]);
+			int compVer = findVertex(T[compId]);
+
+			// Increments smallId to the next city in MST if all of the edges
+			// of smallVer have already been visited, else checks if all the
+			// edges of compVer have been visited.
+			if(graph[smallVer].edgeList.size() == edgesDiscovered(smallVer))
+			{
+				smallId++;
+			}
+			else
+			{
+				// Compares the smallest edge of smallVer and compVer if compVer's
+				// edges have not all been visited.
+				if(graph[compVer].edgeList.size() != edgesDiscovered(compVer))
+				{
+					// Distance between smallVer and its smallest edge.
+					smallDist = distanceBetween(smallVer, smallestEdge(smallVer))
+								+ distanceFromStart(graph[smallVer].city, costs,
+								  	  	  	  	    parent);
+
+					// Distance between compVer and its smallest edge.
+					compDist =  distanceBetween(compVer, smallestEdge(compVer))
+								+ distanceFromStart(graph[compVer].city, costs,
+										  	  	  	parent);
+
+					// Assigns compId to smallId if compVer has a smaller
+					// edge than the current smallest vertex.
+					if(smallDist > compDist)
+					{
+						smallId = compId;
+
+						smallDist = compDist;
+					}
+				}
+			}
+
+			// Increments compId so that it is always at least 1 index ahead of
+			// smallId.
+			compId++;
+		}
+
+		// Graph index of the city with the closest edge.
+		int smallestVertex = smallestEdge(findVertex(T[smallId]));
+
+		costs[smallestVertex] = smallDist;
+		parent[smallestVertex] = findVertex(T[smallId]);
+
+		graph[smallestVertex].visited = true;
+
+		T.push_back(graph[smallestVertex].city);
+	}
+
+}
+
+int Graph::distanceFromStart(string city, int costs[], int parent[])
+{
+	int distance = 0;
+
+	int vertex = findVertex(city);
+
+	while(costs[vertex] != 0)
+	{
+		distance += distanceBetween(vertex, parent[vertex]);
+
+		vertex = parent[vertex];
+	}
+
+	return distance;
 }
 
 int Graph::smallestEdgeMST(vector<string> &mst)
@@ -330,7 +488,7 @@ int Graph::smallestEdge(int vertex)
 		// Gets the graph index of the next closest city.
 		int smallestVertex = findVertex(graph.at(vertex).edgeList.at(smallestIndex).v);
 
-		// Gets the graph index of the city in the edge list being comapred
+		// Gets the graph index of the city in the edge list being compared
 		// to the city at edgeList.at(smallestIndex).
 		int compVertex = findVertex(graph.at(vertex).edgeList.at(compIndex).v);
 

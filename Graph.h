@@ -84,6 +84,10 @@ public:
 	// Returns a list of the edges in the graph.
 	vector<string> edges();
 
+	void shortestPathsDijkstra(string startingCity, vector<string> &T, int costs[], int parent[]);
+
+	vector<string> returnPath(string start, string end, int parent[]);
+
 	// Determines the minimum spanning tree of the graph using Prim-Jarnik's
 	// Algorithm.
 	// PRE-CONDITIONS:
@@ -95,6 +99,10 @@ public:
 	int primJarnikMST(string startingCity, vector<string> &mst);
 
 private:
+	void findClosest(vector<string> &T, int costs[], int parent[]);
+
+	int distanceFromStart(string city, int costs[], int parent[]);
+
 	// Finds the smallest edge from all of the previously visited vertices and
 	// returns its graph index.
 	// PRE-CONDITIONS:
@@ -110,8 +118,8 @@ private:
 
 	// Returns the distance between two vertices.
 	// PRE-CONDITIONS:
-	// v1 - Starting vertex
-	// v2 - Ending vertex
+	// v1 - Graph index of starting vertex
+	// v2 - Graph index of ending vertex
 	int distanceBetween(int v1, int v2);
 
 	// Returns the number of vertices that have been visited.

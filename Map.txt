@@ -22,7 +22,7 @@ Atlanta,Houston,810
 Atlanta,Dallas,781
 Atlanta,Kansas City,864
 Atlanta,New York,888
-New York,Atlanta,1260
+New York,Atlanta,888
 New York,Kansas City,1260
 New York,Chicago,787
 New York,Boston,214

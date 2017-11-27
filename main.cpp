@@ -48,10 +48,41 @@ int main()
 	// Initializes the graph by reading from Map.txt.
 	graph.initializeGraph();
 
-	cout << "\n*******************************\n"
+	cout << "\n*********************************\n"
 			"* PART 1 - DIJKSTRA'S ALGORITHM *\n"
 			"*********************************\n\n";
 
+	string startCity = "Atlanta";
+
+	// Vector T containing the vertices that will be visited during Dijkstra's.
+	vector<string> T;
+
+	// Arrays of costs and parents used for Dijkstra's.
+	int costs[graph.size()];
+	int parent[graph.size()];
+
+	// Determines the shortest path from the starting vertex to all other vertices.
+	graph.shortestPathsDijkstra(startCity, T, costs, parent);
+
+	cout << "Printing the paths from " << startCity << " to all other cities:\n";
+	for(int i = 0; i < graph.size(); i++)
+	{
+		cout << startCity << " to " << T[i] << endl;
+
+		vector<string> path =  graph.returnPath(startCity, T[i], parent);
+
+		for(int j = 0; j < path.size(); j++)
+		{
+			cout << path[j];
+
+			if(j + 1 != path.size())
+			{
+				cout << " -> ";
+			}
+		}
+
+		cout << "\nTotal Distance: " << costs[graph.findVertex(T[i])] << endl << endl;
+	}
 
 	cout << "\n****************\n"
 			"* PART 2 - MST *\n"
@@ -62,18 +93,11 @@ int main()
 	vector<string> mst;
 
 	// Sets the starting city for the MST.
-	string startCity = "Seattle";
+	startCity = "Seattle";
 
 	cout << "Determining the MST starting at " << startCity << ".\n\n"
 		 << "Printing MST edges:\n";
 	int mstDistance = graph.primJarnikMST(startCity, mst);
-
-	// Prints the MST.
-	cout << "\nPrinting the MST:\n";
-	for(int i = 0; i < mst.size(); i++)
-	{
-		cout << mst[i] << endl;
-	}
 
 	cout << "\nTotal Distance : " << mstDistance << endl;
 
