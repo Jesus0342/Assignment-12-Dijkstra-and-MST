@@ -196,15 +196,21 @@ void Graph::shortestPathsDijkstra(string startingCity, vector<string> &T, int co
         }
     }
 
+    // Returns the graph vertex of the starting city "s".
 	int currVertex = findVertex(startingCity);
 
+	// Adds "s" to T.
 	T.push_back(graph[currVertex].city);
 
+	// Sets the cost of "s" to 0 and its parent to -1.
 	costs[currVertex] = 0;
 	parent[currVertex] = -1;
 
+	// Marks "s" as visited.
 	graph[currVertex].visited = true;
 
+	// Finds the next closest vertex to the vertices in the graph until all
+	// vertices have been added to T.
 	while(T.size() != size())
 	{
 		findClosest(T, costs, parent);
@@ -213,10 +219,14 @@ void Graph::shortestPathsDijkstra(string startingCity, vector<string> &T, int co
 
 vector<string> Graph::returnPath(string start, string end, int parent[])
 {
+	// Vector of the names of the cities in the path from start to end.
 	vector<string> path;
 
+	// Returns the graph index of end.
 	int vertex = findVertex(end);
 
+	// Pushes the parent of the current vertex onto the path vector until
+	// "s" is reached.
 	while(parent[vertex] != -1)
 	{
 		path.push_back(graph[vertex].city);
@@ -224,8 +234,10 @@ vector<string> Graph::returnPath(string start, string end, int parent[])
 		vertex = parent[vertex];
 	}
 
+	// Adds "s" to the path vector.
 	path.push_back(graph[vertex].city);
 
+	// Reverese the path vector so that "s" is first and end is last.
 	reverse(path.begin(), path.end());
 
 	return path;
@@ -277,31 +289,35 @@ void Graph::findClosest(vector<string> &T, int costs[], int parent[])
 	// finds the edge with the smallest weight among the edges adjacent to T.
 	if(T.size() == 1)
 	{
+		// Returns the graph index of "s".
 		int frontVer = findVertex(T.front());
 
+		// Returns the graph index of the closest vertex to "s".
 		int nextVer = smallestEdge(frontVer);
 
+		// Stores the cost and parent of the closest vertex.
 		costs[nextVer] = distanceBetween(frontVer, nextVer);
 		parent[nextVer] = frontVer;
 
+		// Marks the closest vertex as visited.
 		graph[nextVer].visited = true;
 
+		// Adds the closest vertex to T.
 		T.push_back(graph[nextVer].city);
 	}
 	else
 	{
-		// MST index of the city with the smallest edge and the index of the
+		// T index of the city with the smallest edge and the index of the
 		// city it is being compared to.
 		int smallId = 0;
 		int compId = smallId + 1;
 
+		// Smallest distance and comparison distance.
 		int smallDist;
 		int compDist;
 
 		// Size of T.
 		int size = T.size();
-
-		int nextVertex;
 
 		// Compares the smallest edge of smallId to all other smallest edges of
 		// the cities in T.
@@ -312,7 +328,7 @@ void Graph::findClosest(vector<string> &T, int costs[], int parent[])
 			int smallVer = findVertex(T[smallId]);
 			int compVer = findVertex(T[compId]);
 
-			// Increments smallId to the next city in MST if all of the edges
+			// Increments smallId to the next city in T if all of the edges
 			// of smallVer have already been visited, else checks if all the
 			// edges of compVer have been visited.
 			if(graph[smallVer].edgeList.size() == edgesDiscovered(smallVer))
@@ -354,11 +370,14 @@ void Graph::findClosest(vector<string> &T, int costs[], int parent[])
 		// Graph index of the city with the closest edge.
 		int smallestVertex = smallestEdge(findVertex(T[smallId]));
 
+		// Stores the cost and parent of the next closest vertex.
 		costs[smallestVertex] = smallDist;
 		parent[smallestVertex] = findVertex(T[smallId]);
 
+		// Marks the next closest vertex as visited.
 		graph[smallestVertex].visited = true;
 
+		// Adds the next closest vertex to T.
 		T.push_back(graph[smallestVertex].city);
 	}
 
@@ -366,14 +385,20 @@ void Graph::findClosest(vector<string> &T, int costs[], int parent[])
 
 int Graph::distanceFromStart(string city, int costs[], int parent[])
 {
+	// Distance accumulator.
 	int distance = 0;
 
+	// Graph index of the city whose distance from "s" will be found.
 	int vertex = findVertex(city);
 
+	// While vertex is not "s", finds the distance between the current vertex
+	// and  its parent.
 	while(costs[vertex] != 0)
 	{
+		// Accumulates distance.
 		distance += distanceBetween(vertex, parent[vertex]);
 
+		// Assigns the value of the parent of the current vertex to vertex.
 		vertex = parent[vertex];
 	}
 

@@ -37,8 +37,8 @@ int main()
 		 << "* and Prim-Kruskal's algorithm on a user defined Graph ADT. For\n"
 		 << "* Dijkstra's algorithm, the shortest path to each city from \n"
 		 << "* Atlanta will be printed with the associated mileage. The MST \n"
-		 << "* algorithm will display the edges found during its implementation\n"
-		 << "* and the total mileage.\n"
+		 << "* algorithm will display the edges found during its implementa-\n"
+		 << "* tion and the total mileage.\n"
 		 <<	"***************************************************************\n\n";
 
 	Graph graph; // Graph object.
@@ -54,23 +54,29 @@ int main()
 
 	string startCity = "Atlanta";
 
-	// Vector T containing the vertices that will be visited during Dijkstra's.
+	// Vector T containing the vertices that have been visited during while
+	// finding the shortest paths using Dijkstra's.
 	vector<string> T;
 
-	// Arrays of costs and parents used for Dijkstra's.
+	// Arrays of costs and parents used for finding the shortest path with
+	// Dijkstra's algorithm.
 	int costs[graph.size()];
 	int parent[graph.size()];
 
 	// Determines the shortest path from the starting vertex to all other vertices.
 	graph.shortestPathsDijkstra(startCity, T, costs, parent);
 
+	// Prints the path from the starting vertex to all other vertices in the graph.
 	cout << "Printing the paths from " << startCity << " to all other cities:\n";
 	for(int i = 0; i < graph.size(); i++)
 	{
+		// Specifies which path will be printed.
 		cout << startCity << " to " << T[i] << endl;
 
+		// Returns the path from the starting vertex to the destination vertex.
 		vector<string> path =  graph.returnPath(startCity, T[i], parent);
 
+		// Prints the path from the starting vertex to the destination vertex.
 		for(int j = 0; j < path.size(); j++)
 		{
 			cout << path[j];
@@ -81,7 +87,9 @@ int main()
 			}
 		}
 
-		cout << "\nTotal Distance: " << costs[graph.findVertex(T[i])] << endl << endl;
+		// Prints the total distance from the starting vertex to the destination
+		// vertex.
+		cout << "\nTotal Distance: " << costs[graph.findVertex(T[i])] << "\n\n";
 	}
 
 	cout << "\n****************\n"
@@ -95,10 +103,12 @@ int main()
 	// Sets the starting city for the MST.
 	startCity = "Seattle";
 
+	// Prints the edges of the MST.
 	cout << "Determining the MST starting at " << startCity << ".\n\n"
 		 << "Printing MST edges:\n";
 	int mstDistance = graph.primJarnikMST(startCity, mst);
 
+	// Prints the total mileage of the MST.
 	cout << "\nTotal Distance : " << mstDistance << endl;
 
 	return 0;

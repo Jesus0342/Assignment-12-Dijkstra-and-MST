@@ -84,8 +84,21 @@ public:
 	// Returns a list of the edges in the graph.
 	vector<string> edges();
 
-	void shortestPathsDijkstra(string startingCity, vector<string> &T, int costs[], int parent[]);
+	// Determines the shortest path from the starting vertex "s" and all other
+	// vertices in the graph.
+	// PRE-CONDITIONS:
+	// startingCity - Starting city "s" must be defined.
+	// T - Vector of vertices that have been visited.
+	// costs[] - Array of costs of each vertex from "s".
+	// parent[] - Array storing the parents of all visited vertices.
+	void shortestPathsDijkstra(string startingCity, vector<string> &T,
+							   int costs[], int parent[]);
 
+	// Returns the shortest path from start to end.
+	// PRE-CONDITIONS:
+	// start - Starting city must be defined.
+	// end - Destination city must be defined.
+	// parent - Array of parents must be defined.
 	vector<string> returnPath(string start, string end, int parent[]);
 
 	// Determines the minimum spanning tree of the graph using Prim-Jarnik's
@@ -99,8 +112,19 @@ public:
 	int primJarnikMST(string startingCity, vector<string> &mst);
 
 private:
+	// Determines the next closest vertex to all previously discovered vertices
+	// by calculating their distance from the "s".
+	// PRE-CONDITIONS:
+	// T - Vector of vertices that have been visited.
+	// costs[] - Array of costs of each vertex from "s".
+	// parent[] - Array storing the parents of all visited vertices.
 	void findClosest(vector<string> &T, int costs[], int parent[]);
 
+	// Returns the distance of a vertex from "s".
+	// PRE-CONDITIONS:
+	// city - Name of city whose distance from "s" will be found.
+	// costs[] - Array of costs of each vertex from "s".
+	// parent[] - Array storing the parents of all visited vertices.
 	int distanceFromStart(string city, int costs[], int parent[]);
 
 	// Finds the smallest edge from all of the previously visited vertices and
