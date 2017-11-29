@@ -50,7 +50,7 @@ int main()
 
 	cout << "\n*********************************\n"
 			"* PART 1 - DIJKSTRA'S ALGORITHM *\n"
-			"*********************************\n\n";
+			"*********************************\n";
 
 	string startCity = "Atlanta";
 
@@ -65,6 +65,9 @@ int main()
 
 	// Determines the shortest path from the starting vertex to all other vertices.
 	graph.shortestPathsDijkstra(startCity, T, costs, parent);
+
+	cout << "Finding the shortest distance from " << startCity
+		 << " to all other cities...\n\n";
 
 	// Prints the path from the starting vertex to all other vertices in the graph.
 	cout << "Printing the paths from " << startCity << " to all other cities:\n";
@@ -89,12 +92,12 @@ int main()
 
 		// Prints the total distance from the starting vertex to the destination
 		// vertex.
-		cout << "\nTotal Distance: " << costs[graph.findVertex(T[i])] << "\n\n";
+		cout << "\nTotal Distance: " << costs[graph.findVertex(T[i])] << "\n";
 	}
 
 	cout << "\n****************\n"
 			"* PART 2 - MST *\n"
-			"****************\n\n";
+			"****************\n";
 
 	// Vector storing the order that the cities were visited it when determining
 	// the MST of the graph.

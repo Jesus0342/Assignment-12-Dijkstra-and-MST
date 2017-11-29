@@ -29,57 +29,46 @@ Kansas City
 *********************************
 * PART 1 - DIJKSTRA'S ALGORITHM *
 *********************************
+Finding the shortest distance from Atlanta to all other cities...
 
 Printing the paths from Atlanta to all other cities:
 Atlanta to Miami
 Atlanta -> Miami
 Total Distance: 661
-
 Atlanta to Dallas
 Atlanta -> Dallas
 Total Distance: 781
-
 Atlanta to Houston
 Atlanta -> Houston
 Total Distance: 810
-
 Atlanta to Kansas City
 Atlanta -> Kansas City
 Total Distance: 864
-
 Atlanta to New York
 Atlanta -> New York
 Total Distance: 888
-
 Atlanta to Boston
 Atlanta -> New York -> Boston
 Total Distance: 1102
-
 Atlanta to Chicago
 Atlanta -> Kansas City -> Chicago
 Total Distance: 1397
-
 Atlanta to Denver
 Atlanta -> Kansas City -> Denver
 Total Distance: 1463
-
 Atlanta to Los Angeles
 Atlanta -> Dallas -> Los Angeles
 Total Distance: 2216
-
 Atlanta to San Francisco
 Atlanta -> Dallas -> Los Angeles -> San Francisco
 Total Distance: 2597
-
 Atlanta to Seattle
 Atlanta -> Kansas City -> Denver -> Seattle
 Total Distance: 2794
 
-
 ****************
 * PART 2 - MST *
 ****************
-
 Determining the MST starting at Seattle.
 
 Printing MST edges:
