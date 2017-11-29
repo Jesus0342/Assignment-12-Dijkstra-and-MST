@@ -1,5 +1,5 @@
 ***************************************************************
-* NAME           : Jesus Sanchez & 
+* NAME           : Jesus Sanchez, Lee Evans, & Sabrina Dang
 * ASSIGNMENT #12 : Dijkstra and MST
 * CLASS          : CS1D - MW: 3:00pm
 * DUE DATE       : 11/29/2017

@@ -1,5 +1,5 @@
 /******************************************************************************
- * AUTHORS        : Jesus Sanchez &
+ * AUTHORS        : Jesus Sanchez, Lee Evans, & Sabrina Dang
  * ASSIGNMENT #12 : Dijkstra and MST
  * CLASS          : CS1D
  * SECTION        : MW: 3:00pm
@@ -29,7 +29,7 @@
 int main()
 {
 	cout << "***************************************************************\n"
-		 << "* NAME           : Jesus Sanchez & \n"
+		 << "* NAME           : Jesus Sanchez, Lee Evans, & Sabrina Dang\n"
 		 << "* ASSIGNMENT #12 : Dijkstra and MST\n"
 		 << "* CLASS          : CS1D - MW: 3:00pm\n"
 		 << "* DUE DATE       : 11/29/2017\n*\n"
